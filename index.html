@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-theme="night">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Explore how lighting observations and business opening hours shape Spring Garden East after dark.">
+  <title>Spring Garden East · After Dark Atlas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Roboto+Condensed:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="data.js"></script><script defer src="core.js"></script><script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#browse">Browse mapped records</a>
+  <canvas id="map" tabindex="0" aria-label="Interactive map of Spring Garden East. Drag to pan, scroll to zoom, or use the map controls. Use Browse for a text list."></canvas>
+  <header class="head">
+    <p class="eyebrow">CITY AT NIGHT / PHILADELPHIA</p>
+    <h1>Spring Garden East<span>After Dark Atlas</span></h1>
+    <nav class="tabs" role="tablist" aria-label="Investigations">
+      <button id="businessTab" role="tab" aria-selected="true">Business Activity Investigation</button>
+      <button id="lightTab" role="tab" aria-selected="false">Light Investigation</button>
+    </nav>
+    <div class="clock" id="clock">21:00</div><p id="when" class="when">Saturday · local time</p>
+  </header>
+  <aside class="summary-panel" aria-label="Investigation summary">
+    <div class="count"><strong id="count">29<span>/71</span></strong><p id="countLabel">places scheduled open</p></div>
+    <label class="search-label" for="search">FIND A PLACE OR LIGHT RECORD</label>
+    <div class="search-wrap"><input id="search" type="search" placeholder="Silk City, building 20, pole…" autocomplete="off"><button id="browse" title="Browse mapped records">Browse</button></div>
+    <div id="results" class="results" hidden></div>
+    <section class="breakdown"><h2 id="breakdownTitle">Open now, by type</h2><div id="rows"></div><p id="summaryNote" class="muted small"></p></section>
+    <div class="layers" id="businessLayers">
+      <label><input id="onlyOpen" type="checkbox"> Open places only</label>
+      <label><input id="heat" type="checkbox"> Show open-place concentration</label>
+      <label><input id="crossLight" type="checkbox"> Overlay lighting observations</label>
+      <label><input id="compare" type="checkbox"> Compare with evening 18:00</label>
+    </div>
+    <div class="layers" id="lightLayers" hidden>
+      <label><input id="buildings" type="checkbox" checked> Rated building frontages</label>
+      <label><input id="poles" type="checkbox" checked> Mapped light poles</label>
+      <label><input id="crossBusiness" type="checkbox"> Overlay scheduled-open places</label>
+      <label class="select-label">Pole records <select id="bulb"><option value="all">All fixture records</option><option value="LED">Recorded LED</option><option value="UNKNOWN">Bulb type unknown</option></select></label>
+    </div>
+    <div class="map-options"><button id="street">Street reference</button><button id="theme">Auto light</button></div>
+  </aside>
+  <div class="map-tools" aria-label="Map controls"><button id="zoomIn" aria-label="Zoom in">+</button><button id="zoomOut" aria-label="Zoom out">−</button><button id="reset" aria-label="Reset map extent">↺</button></div>
+  <aside class="detail" id="detail" aria-live="polite" hidden><button id="closeDetail" class="close" aria-label="Close record details">×</button><div id="detailBody"></div></aside>
+  <section class="dock" aria-label="Investigation controls">
+    <div id="businessDock">
+      <div class="dock-row"><div id="days" class="chips" aria-label="Weekday"></div><span class="dock-label">Local calendar day</span></div>
+      <div id="cats" class="chips category-chips" aria-label="Business category"></div>
+      <div class="scrub"><button id="play" aria-label="Play through time">▶</button><div class="track"><canvas id="hist" aria-hidden="true"></canvas><input id="time" type="range" min="0" max="1425" step="15" value="1260" aria-label="Time of day"><div class="ticks"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div></div></div>
+      <div class="moments"><span>Follow one night</span><button data-moment="0">Sat 18:00</button><button data-moment="1">Sat 21:00</button><button data-moment="2">Sun 00:00</button><button data-moment="3">Sun 02:00</button></div>
+    </div>
+    <div id="lightDock" hidden>
+      <div class="dock-row"><h2>Observed brightness</h2><span class="dock-label">Static field ratings · higher = brighter</span></div>
+      <div id="ratings" class="chips rating-chips" aria-label="Observed brightness filter"></div>
+      <p class="light-description">21 rated buildings and 100 pole records. Building ratings are ordinal observations, not lux measurements. Pole locations do not establish light coverage or operating condition.</p>
+      <button id="editOverlayTime" class="text-button">Business overlay: Saturday 21:00 · change time in Business Activity</button>
+    </div>
+  </section>
+  <footer><span>North ↑ <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></span><div><button id="export">Export filtered records</button><button id="methods">Methods & sources</button></div></footer>
+  <div id="toast" role="status" hidden></div>
+  <dialog id="methodDialog"><button id="closeMethods" class="close" aria-label="Close methods">×</button><p class="eyebrow">READING THIS ATLAS</p><h2>Two investigations, distinct evidence</h2>
+    <h3>Business activity</h3><p>71 commercial Google Places points with usable opening schedules inside Study_Area_Large. Missing or flagged hours are excluded. Open means scheduled open, including overnight intervals, rather than observed visitors. The schedule collection date is unknown. Weekdays follow calendar days: Sunday 00:00 includes Saturday overnight openings.</p>
+    <h3>Lighting observations</h3><p>21 supplied building polygons have field brightness ratings from 1 to 5. The researcher confirmed that higher values mean brighter observations. No sampled building has rating 4. The survey date and measurement protocol were not supplied, so these ratings do not establish lux levels or changes over time.</p><p>100 supplied pole records include location, owner, recorded bulb type and some inventory dates. UNKNOWN means the bulb field is unspecified, not that the pole is dark. Point halos are a map symbol, not modeled beam coverage.</p>
+    <h3>Overlays and comparison</h3><p>Open-place heat uses equal-weight Gaussian kernels, with 90 m standard deviation and a fixed scale across times and filters. It is exploratory concentration, not measured footfall or a significance test. Comparing with evening 18:00 shows which scheduled places have closed. Before 06:00, the baseline is 18:00 on the preceding calendar day. Straight-line distance to the nearest mapped pole does not establish sidewalk illumination, route quality or safety.</p>
+    <h3>Geographic reference</h3><p>Actual OpenStreetMap street and building geometry from a local extract downloaded October 19, 2026. The outline is the larger business study area. Street reference optionally loads OpenStreetMap tiles. The map works with its packaged vector reference without a map API key. Automatic display colors gradually darken from 17:00 to 22:00 and brighten from 05:00 to 08:00. This is a visual time cue, not measured illumination or a seasonal sunrise/sunset calculation. The Light Investigation uses a static night display by default.</p>
+    <p><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap attribution and ODbL</a> · <a href="https://yichenhu-0811.github.io/When_Old_City_Turns_Dark/" target="_blank" rel="noopener">Design reference: When Old City Turns Dark</a></p>
+    <p class="muted">Prepared October 27, 2026. Historical transaction and Dewey visit datasets are outside this atlas.</p>
+  </dialog>
+  <noscript>This atlas needs JavaScript. Its packaged inventory contains 71 commercial places, 21 brightness-rated buildings and 100 pole records.</noscript>
+</body></html>
