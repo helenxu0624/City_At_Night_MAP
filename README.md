@@ -20,7 +20,6 @@ The heat overlay uses equal-weight Gaussian kernels with 90 m standard deviation
 - Supplied Google Places commercial inventory and opening intervals within Study_Area_Large. Schedule collection date unknown.
 - Supplied building_light and LightPole_data shapefiles.
 - Street and building reference: © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), ODbL. Local extract downloaded October 19, 2026.
-- Visual interaction reference: [When Old City Turns Dark](https://yichenhu-0811.github.io/When_Old_City_Turns_Dark/). Implemented independently with the Spring Garden East inventories and geography.
 
 ## GitHub Pages
 
